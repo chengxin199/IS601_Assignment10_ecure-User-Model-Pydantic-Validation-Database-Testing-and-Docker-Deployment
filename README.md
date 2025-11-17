@@ -1,3 +1,24 @@
+# 📦 Module 10 - Secure User Model with Pydantic Validation, Database Testing, and Docker Deployment
+
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-chengxin199%2Fis601__module10-blue?logo=docker)](https://hub.docker.com/r/chengxin199/is601_module10)
+
+## 🐳 Docker Hub Repository
+
+**Pull the latest image:**
+```bash
+docker pull chengxin199/is601_module10:latest
+```
+
+**Available tags:** `latest`, `v1.0`
+
+**Repository Link:** [https://hub.docker.com/r/chengxin199/is601_module10](https://hub.docker.com/r/chengxin199/is601_module10)
+
+## 📖 Additional Documentation
+
+- **[Reflection Document](REFLECTION.md)** - Key experiences, challenges, and lessons learned during development
+
+---
+
 # 📦 Project Setup
 
 ---
@@ -198,23 +219,179 @@ docker run -it --rm <image-name>
 
 # 🚀 6. Running the Project
 
-- **Without Docker**:
+## Local Development with Docker Compose
+
+Start all services (FastAPI app, PostgreSQL, pgAdmin):
 
 ```bash
-python main.py
+docker compose up -d
 ```
 
-(or update this if the main script is different.)
+The application will be available at:
+- **API**: http://localhost:8000
+- **API Documentation (Swagger)**: http://localhost:8000/docs
+- **pgAdmin**: http://localhost:5050
+  - Email: `admin@example.com`
+  - Password: `admin`
 
-- **With Docker**:
+Stop all services:
 
 ```bash
-docker run -it --rm <image-name>
+docker compose down
+```
+
+Stop and remove volumes (clean database):
+
+```bash
+docker compose down -v
+```
+
+## Running Without Docker
+
+```bash
+source venv/bin/activate  # Activate virtual environment
+python main.py
 ```
 
 ---
 
-# 📝 7. Submission Instructions
+# 🧪 7. Running Tests Locally
+
+This project includes comprehensive unit, integration, and end-to-end tests covering user models, authentication, password hashing, and database operations.
+
+## Prerequisites
+
+1. **Activate virtual environment**:
+   ```bash
+   source venv/bin/activate   # Mac/Linux
+   venv\Scripts\activate.bat  # Windows
+   ```
+
+2. **Start Docker services** (required for integration tests):
+   ```bash
+   docker compose up -d
+   ```
+
+## Run All Tests
+
+```bash
+pytest
+```
+
+## Run Specific Test Suites
+
+- **Unit Tests Only**:
+  ```bash
+  pytest tests/unit/ -v
+  ```
+
+- **Integration Tests Only** (requires PostgreSQL):
+  ```bash
+  pytest tests/integration/ -v
+  ```
+
+- **End-to-End Tests**:
+  ```bash
+  pytest tests/e2e/ -v
+  ```
+
+## Run Tests with Coverage
+
+```bash
+pytest --cov=app --cov-report=html
+```
+
+View the coverage report by opening `htmlcov/index.html` in your browser.
+
+## Run Specific Test Files
+
+```bash
+# Test user model and database operations
+pytest tests/integration/test_user.py -v
+
+# Test authentication and password hashing
+pytest tests/integration/test_user_auth.py -v
+
+# Test Pydantic schema validation
+pytest tests/integration/test_schema_base.py -v
+```
+
+## Additional Test Options
+
+- **Preserve Database After Tests** (for inspection):
+  ```bash
+  pytest tests/integration/test_user.py --preserve-db
+  ```
+
+- **Show detailed output with print statements**:
+  ```bash
+  pytest tests/integration/ -v -s
+  ```
+
+- **Run tests matching a keyword**:
+  ```bash
+  pytest -k "password" -v
+  ```
+
+- **Stop after first failure**:
+  ```bash
+  pytest --maxfail=1
+  ```
+
+## What's Being Tested
+
+- ✅ **User Model**: SQLAlchemy model with unique constraints on username and email
+- ✅ **Password Hashing**: bcrypt password hashing and verification
+- ✅ **User Registration**: Creating users with validation
+- ✅ **Authentication**: User login with JWT token generation
+- ✅ **Pydantic Schemas**: UserCreate and UserRead validation
+- ✅ **Database Operations**: CRUD operations, transactions, and rollbacks
+- ✅ **Uniqueness Constraints**: Testing duplicate email/username prevention
+- ✅ **Invalid Data Handling**: Testing invalid emails, short passwords, etc.
+
+---
+
+# 🐳 8. Docker Hub Repository
+
+The Docker image for this project is published to Docker Hub:
+
+**Repository**: [chengxin199/is601_module10](https://hub.docker.com/r/chengxin199/is601_module10)
+
+## Pull and Run the Image
+
+```bash
+# Pull the latest image
+docker pull chengxin199/is601_module10:latest
+
+# Run the container
+docker run -p 8000:8000 chengxin199/is601_module10:latest
+```
+
+## Available Tags
+
+- `latest` - The most recent build
+- `v1.0` - Version 1.0 release
+
+## Build and Push Your Own Image
+
+```bash
+# Build the image
+docker build -t chengxin199/is601_module10:latest .
+
+# Tag with version
+docker tag chengxin199/is601_module10:latest chengxin199/is601_module10:v1.0
+
+# Login to Docker Hub
+docker login
+
+# Push to Docker Hub
+docker push chengxin199/is601_module10:latest
+docker push chengxin199/is601_module10:v1.0
+```
+
+---
+
+# 📝 9. Submission Instructions
 
 After finishing your work:
 
